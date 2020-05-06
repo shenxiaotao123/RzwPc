@@ -195,6 +195,14 @@
         </div>
       </div>
     </div>
+    <!--家装热点-->
+    <div class="bg-f7 news homeBox">
+      <div class="wrap">
+        <h2 class="text-darkgray text-c">家装热点</h2>
+        <p class="vice text-lightgray text-c">新闻资讯,一手掌握</p>
+
+      </div>
+    </div>
   </div>
 </template>
 
