@@ -6,6 +6,7 @@ address,caption,cite,code,dfn,th,var {font-style:normal;font-weight:normal;}
 ol,ul {list-style:none;}
 caption,th {text-align:left;}
 img a {border: none;}
+a { text-decoration: none;}
 .clear { clear:both;}
 /*部分公用样式*/
 .wrap { margin: 0 auto; width: 1200px;}
@@ -249,6 +250,7 @@ img a {border: none;}
 .v-middle {vertical-align: middle}
 .modal-title2 { margin: 0; line-height: 1.42857143;}
 
+.bg-ff { background-color: #fff;}
 .bg-f7 { background-color: #f7f7f7;}
 
 .text-gray { color: #999;}
