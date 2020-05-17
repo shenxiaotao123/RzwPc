@@ -5,7 +5,7 @@
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
         <el-menu-item index="1" @click="$router.push({path:'/'})">首页</el-menu-item>
         <el-menu-item index="2" @click="$router.push({path:'/constructionList'})">找施工</el-menu-item>
-        <el-menu-item index="3">找设计</el-menu-item>
+        <el-menu-item index="3" @click="$router.push({path:'/designerList'})">找设计</el-menu-item>
         <el-menu-item index="4">买材料</el-menu-item>
         <el-menu-item index="5">效果图</el-menu-item>
         <el-menu-item index="6">查攻略</el-menu-item>

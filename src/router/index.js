@@ -3,10 +3,12 @@ import Router from 'vue-router'
 import home from '@/main/home' //首页
 import myhead from '@/components/myhead' //头部
 import myfooter from '@/components/myfooter' //尾部
-import constructionList from '@/construction/list' //施工公司
-import company from '@/construction/details' //施工公司
+import constructionList from '@/construction/list' //施工公司列表
+import company from '@/construction/details' //施工公司详情页
 import comment from '@/public/Comment' //施工公司评价组件
 import downloadApp from '@/public/downloadApp' //弹出框APP引导
+import designerList from '@/designer/list' //设计师列表
+import designer from '@/designer/details' //设计师详情页
 
 Vue.use(Router)
 
@@ -28,7 +30,7 @@ export default new Router({
       component: myfooter
     },
     {
-      path: '/constructionList', //施工公司
+      path: '/constructionList', //施工公司列表
       name: 'constructionList',
       component: constructionList
     },
@@ -40,6 +42,17 @@ export default new Router({
         {
           path: 'comment',
           component: comment
+        }
+      ]
+    },
+    {
+      path: '/designerList', //设计师列表
+      name: 'designerList',
+      component: designerList,
+      children:[
+        {
+          path: 'designer',
+          component: designer
         }
       ]
     },
