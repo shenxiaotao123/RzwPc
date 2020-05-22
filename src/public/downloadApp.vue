@@ -3,7 +3,7 @@
 
     <div class="fl wrapper" style="margin-left: 220px; margin-top: 20px;">
       <p class="m-t size18 font-bold l-h-2x">
-        为了您更好的支付体验， 请下载 荣装网APP 继续进行  下一步操作哦！
+        为了您更好的支付/评论等体验， 请下载 荣装网APP 继续进行下一步操作哦！
       </p>
 
       <p class="gray size14" style=" margin-top: 30px;">

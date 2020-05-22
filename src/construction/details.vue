@@ -141,7 +141,7 @@
 
 <style lang="less">
   @mian-color: #c82126;
-  .el-message-box { width: 600px;}
+  
 
 .headCon { position: relative; height: 400px; background: url("~@/assets/img/construction/banner.jpg") no-repeat;
   .dse-info { position: absolute; left: 50%; top:50px; margin-left: -325px; padding:25px; width: 600px;

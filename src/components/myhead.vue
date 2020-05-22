@@ -7,9 +7,9 @@
         <el-menu-item index="2" @click="$router.push({path:'/constructionList'})">找施工</el-menu-item>
         <el-menu-item index="3" @click="$router.push({path:'/designerList'})">找设计</el-menu-item>
         <el-menu-item index="4">买材料</el-menu-item>
-        <el-menu-item index="5">效果图</el-menu-item>
-        <el-menu-item index="6">查攻略</el-menu-item>
-        <el-menu-item index="7">咨询问答</el-menu-item>
+        <el-menu-item index="5" @click="$router.push({path:'/renderingsList'})">效果图</el-menu-item>
+        <el-menu-item index="6" @click="$router.push({path:'/raidersList'})">查攻略</el-menu-item>
+        <el-menu-item index="7" @click="$router.push({path:'/qaList'})">咨询问答</el-menu-item>
         <el-submenu index="8">
           <template slot="title">更多</template>
           <el-menu-item index="8-1">创客空间</el-menu-item>

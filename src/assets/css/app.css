@@ -45,6 +45,7 @@ a { text-decoration: none;}
 
 .l-h-0x{line-height: 0;}
 .l-h-1x{line-height: 1.2;}
+.l-h-1-6x{line-height: 1.6;}
 .l-h-2x{line-height: 2em;}
 
 .l-s-1x{letter-spacing: 1}
@@ -256,3 +257,12 @@ a { text-decoration: none;}
 .text-gray { color: #999;}
 .text-lightgray { color: #666;}
 .text-darkgray { color: #333;}
+.text-mainColor { color: #c82126;}
+
+
+.el-message-box { width: 600px !important;}
+
+
+
+
+

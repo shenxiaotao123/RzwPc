@@ -48,10 +48,10 @@
 
      <div class="designer-listcon">
        <div class="des-conleft">
-           <div class="dse-listbox" @click="$router.push({path:'/designer',query:{id:designer.id}})" v-for="designer of designerList.slice(0,6)">
+           <div class="dse-listbox" v-for="designer of designerList.slice(0,6)">
                <div class="dse-info">
-                 <div class="fl dse-infotext">
-                   <a target="_blank">
+                 <div class="fl dse-infotext" @click="$router.push({path:'/designer',query:{id:designer.id}})">
+                   <a target="_blank" >
                      <el-image shape="square" :src="designer.avatar" class="dse-avatar m-r-md"></el-image>
                    </a>
                    <div class="designer-info">
@@ -79,9 +79,9 @@
                  </div>
                   <div class="fr">
                     <div class="designer-price">
-                       <span class="size24">100-300</span>元/㎡
+                       <span class="size24">{{designer.min_money}}-{{designer.max_money}}</span>元/㎡
                     </div>
-                    <a href="/Home/Index/designerDetails/Did/37" class="btn btn-danger m-r-sm padder-lg" target="_blank">预约TA设计</a>
+                      <el-button type="danger" @click="open">预约TA设计</el-button>
                   </div>
                </div>
            </div>
@@ -147,6 +147,7 @@
 <script>
   import myhead from '@/components/myhead'
   import myfooter from '@/components/myfooter'
+  import downloadApp from '@/public/downloadApp' //弹出框APP引导
     export default {
         name: "list",
         data() {
@@ -158,7 +159,8 @@
         },
         components: {
           myhead,
-          myfooter
+          myfooter,
+          downloadApp
         },
       mounted() {
         this.$ajax.get('/construction/site').then((response) => { //在施工地
@@ -189,6 +191,15 @@
             console.log(response.message);
           }
         });
+      },
+      methods: {
+
+        open() {
+          this.$alert(<downloadApp></downloadApp>,{
+            dangerouslyUseHTMLString: true,
+              showConfirmButton:false,
+          });
+        }
       }
     }
 </script>

@@ -210,7 +210,6 @@
               </div>
             </div>
           </el-col>
-          <el-col :span="12"><div class="grid-content bg-purple-light"></div></el-col>
         </el-row>
       </div>
     </div>
@@ -353,7 +352,7 @@ export default {
     .sloganCon { margin: 0 100px 50px 100px;
       .slogan-content {  margin-top: 50px; color: #878c9a;
         h6 { margin: 10px 0; font-size: 18px;}
-        .sloganIcon { margin: 0 auto; display: block; width: 57px; height: 47px; background:  url("~@/assets/img/home/sloganIcon.png") no-repeat;}
+        .sloganIcon { margin: 0 auto; display: block; width: 57px; height: 47px; background: url("~@/assets/img/home/sloganIcon.png") no-repeat;}
         .icon-02 { background-position: -57px 0;}
         .icon-03 { background-position: -114px 0;}
         .icon-04 { background-position: -171px 0;}
