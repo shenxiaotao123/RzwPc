@@ -93,9 +93,6 @@
         if (response.status >= 200 && response.status < 300) {
           this.advisory = response.data.data
           var class_id = this.$route.query.class_id
-
-
-
         } else {
           console.log(response.message);
         }

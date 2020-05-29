@@ -10,6 +10,7 @@ a { text-decoration: none;}
 .clear { clear:both;}
 /*部分公用样式*/
 .wrap { margin: 0 auto; width: 1200px;}
+.wrap:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
 
 .pos-rlt{position: relative;}
 .pos-stc{position: static !important;}

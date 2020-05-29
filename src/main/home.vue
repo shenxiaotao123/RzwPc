@@ -6,7 +6,7 @@
       <template>
         <el-carousel :interval="5000" arrow="always" height="700px">
           <el-carousel-item v-for="tt of titleHome">
-            <h3 <el-image :src="tt.pic_url" @click="$router.push({path:tt.url})"></el-image></h3>
+            <h3><el-image :src="tt.pic_url" @click="$router.push({path:tt.url})"></el-image></h3>
           </el-carousel-item>
         </el-carousel>
       </template>

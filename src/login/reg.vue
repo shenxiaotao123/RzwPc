@@ -4,7 +4,7 @@
        <div class="login pos-rlt">
           <div class="loginForm">
             <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="短信验证码登录" name="second">
+                <el-tab-pane label="账号注册" name="second">
                   <form @submit="onSubmit">
                        <el-input v-model="sms.username" class="m-b-sm" type="tel" left-icon="phone-o" placeholder="手机号码" maxlength="11"></el-input>
                        <div class="pos-rlt">
@@ -12,9 +12,11 @@
                          <el-button type="text" class="Code" v-show="!sendCode">{{authTime}}秒</el-button>
                          <el-button type="text" class="Code" v-show="sendCode" @click="ObtainCode()">获取验证码</el-button>
                        </div>
+                       <el-input placeholder="请输入密码" class="m-b-sm" v-model="sms.password" show-password></el-input>
+                       <el-input placeholder="请重复输入密码" class="m-b-sm" v-model="sms.repassword" show-password></el-input>
 
                        <div class="m-t-md">
-                         <el-button type="danger" class="w-full" native-type="submit">登录</el-button>
+                         <el-button type="danger" class="w-full" native-type="submit">注册</el-button>
                        </div>
                   </form>
                 </el-tab-pane>
@@ -22,7 +24,7 @@
             </el-tabs>
             <div class="size12 m-t-md text-gray">
               <span class="fl" @click="open">忘记登录密码？</span>
-              <span class="fr" @click="$router.push({path:'/reg'})">还没有账号？立即注册</span>
+              <span class="fr" @click="$router.push({path:'/login'})">已有账号？立即登录</span>
             </div>
           </div>
        </div>
@@ -43,7 +45,8 @@
           sms:{
             username:'',
             tel_code:'',
-            type:'sms'
+            password:'',
+            repassword:''
           },
            sendCode: true, // 控制发送验证码按钮显示
            authTime: 0, // 倒计时
@@ -56,10 +59,6 @@
         comment,
         downloadApp
       },
-      created() {
-
-
-            },
       mounted() {
 
       },
@@ -69,26 +68,21 @@
               var params= {
                 'username' : this.sms.username,
                 'tel_code' : this.sms.tel_code,
-                'type': 'sms'
+                'password' : this.sms.password,
+                'repassword' : this.sms.repassword
               };
               var formData = params; // 这里才是你的表单数据
-              this.$ajax.post('consumer/login', formData).then((response) => {
+              this.$ajax.post('consumer/reg/2', formData).then((response) => {
                 // success callback
-                alert(response.data.msg)//接口返回信息
-                //console.log(response);
-                //沒有token的情況
-                if(this.$cookies.isKey('token')){
-                  console.log('没有token')
-                  this.$cookies.set('token', response.data.token,60*60*24*30)
-                  console.log('12345')
-                   console.log(response.data.data.token)
-                  document.cookie
-                  var realname = this.$cookies.get("real_name")
-                  this.realnameData = realname
-                  alert(realname)
-                }else{
-                  //this.load()
+                var code = response.data.code
+                if(code==0){ //注册成功
+                  alert(response.data.msg)//接口返回信息
+                  this.$router.push({path:'/login'})
                 }
+                else{
+                  alert(response.data.msg)//接口返回信息
+                }
+                console.log(response);
               }, (response) => {
                 // error callback
                 console.log(error);
@@ -134,7 +128,7 @@
 </script>
 
 <style lang="less">
-  .login { height: 500px; background: url("~@/assets/img/login/bg.jpg") no-repeat center;
+  .login { height: 500px; background: url("~@/assets/img/login/regBg.jpg") no-repeat center;
     .loginForm { position: absolute; left:50%; top: 50px; margin-left: 240px; padding: 20px 30px 30px 30px; width: 300px; background-color: #fff; border-radius:5px; box-shadow: #eee 10px 10px 0;
       .Code { position: absolute !important; right: 25px; top:0;}
       .el-tabs__item { height: 50px; line-height: 50px; font-size: 16px; font-weight: 700;}

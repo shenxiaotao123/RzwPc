@@ -122,6 +122,7 @@
         }
         .breadcrumbpic { position:absolute; bottom: -12px; right:0; width:342px; height:68px; background: url("~@/assets/img/construction/breadcrumb.png") no-repeat;}
       }
+      
     .filter { padding:35px 35px 25px 35px; background:#fff; font-size:12px;
       .fi-wrap { margin-bottom:10px;
         &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
@@ -137,6 +138,7 @@
         }
       }
     }
+    
     .sort { margin: 10px 0; height:38px; line-height:38px; background: #fff; border:1px solid #eee;
       a { display: inline-block; padding:0 20px; color:#888; font-size:12px; border-right: 1px solid #eee;
       }
