@@ -77,18 +77,16 @@
                 alert(response.data.msg)//接口返回信息
                 //console.log(response);
                 //沒有token的情況
-                if(this.$cookies.isKey('token')){
+                  this.$cookies.isKey('token')
                   console.log('没有token')
-                  this.$cookies.set('token', response.data.token,60*60*24*30)
+                  this.$cookies.set('token', response.data.data.token,60*60*24*30)
                   console.log('12345')
                    console.log(response.data.data.token)
                   document.cookie
                   var realname = this.$cookies.get("real_name")
                   this.realnameData = realname
                   alert(realname)
-                }else{
-                  //this.load()
-                }
+
               }, (response) => {
                 // error callback
                 console.log(error);

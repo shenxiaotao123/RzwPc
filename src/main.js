@@ -6,6 +6,7 @@ import ElementUI from 'element-ui'; //UI框架
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/element-#C82126/index.css'; //自定义主题
 import BaiduMap from 'vue-baidu-map' //百度地图
+import VueCookies from 'vue-cookies'
 
 Vue.use(BaiduMap, {
   ak: 'hj2N4Kob8xdPDIu8bxlyYhbbEdOfwBXz'
@@ -13,6 +14,7 @@ Vue.use(BaiduMap, {
 
 Vue.use(less)
 Vue.use(ElementUI)
+Vue.use(VueCookies)
 
 import axios from 'axios'
 import qs from 'qs'
