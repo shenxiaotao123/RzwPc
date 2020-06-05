@@ -5,17 +5,55 @@
     <div class="wrap pos-rlt">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/user' }">账户中心</el-breadcrumb-item>
         <el-breadcrumb-item>账户中心</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
   </div>
   <div class="userTop">
     <div class="wrap">
-       <div class="fl">
-         <el-avatar :size="50" :src="userInfo.user_image" class="v-middle fl m-r-sm"></el-avatar>
-         <p class="size18 l-h-1-6x bbs_user_name">{{userInfo.real_name}}</p>
-         <p class="size12 text-gray">进入个人主页</p>
+       <div class="fl m-t-lg">
+         <el-avatar :size="80" :src="userInfo.user_image" class="v-middle fl m-r-md"></el-avatar>
+         <div class="fl">
+           <strong><p class="size24 l-h-1-6x bbs_user_name">{{userInfo.real_name}}</p></strong>
+           <p class="m-t-xs size14 text-gray pointer" @click="$router.push({path:'/userIndex'})">进入个人主页</p>
+         </div>
        </div>
+    </div>
+  </div>
+  <div class="wrap m-t-sm">
+    <div class="userLeft">
+
+          <el-menu default-active="1" class="el-menu-vertical-demo">
+
+            <el-menu-item index="1">
+              <i class="el-icon-menu"></i>
+              <span slot="title">基本信息</span>
+            </el-menu-item>
+            <el-menu-item index="2">
+              <i class="el-icon-lock"></i>
+              <span slot="title">修改登陆密码</span>
+            </el-menu-item>
+            <el-menu-item index="3">
+              <i class="el-icon-phone-outline"></i>
+              <span slot="title">修改手机号</span>
+            </el-menu-item>
+          </el-menu>
+        </el-col>
+    </div>
+    <div class="userRight">
+      <form @submit="modifySubmit">
+        <ul class="infoform">
+          <li><span class="fr pointer" @click="open"><el-avatar :size="30" :src="userInfo.user_image" class="v-middle fl m-r-md"></el-avatar></span>头像</li>
+          <li><span class="fr text-gray">{{userInfo.phone}}</span>手机号</li>
+          <li><div class="fr text-gray"><el-input v-model="name.real_name" value="sss"></el-input></div>账户名</li>
+          <li><span class="fr text-gray"></span>性别</li>
+        </ul>
+
+        <div class="m-t-md">
+          <el-button type="danger" class="w-full" native-type="submit">保存</el-button>
+        </div>
+      </form>
     </div>
   </div>
   <myfooter></myfooter>
@@ -25,26 +63,68 @@
 <script>
   import myhead from '@/components/myhead'
   import myfooter from '@/components/myfooter'
+  import comment from '@/public/Comment'
+  import downloadApp from '@/public/downloadApp' //弹出框APP引导
 
   export default {
       name: "list",
       data() {
         return {
-          userInfo:[]
+          userInfo:[],
+          name:{
+            real_name:''
+          }
         }
       },
       components: {
         myhead,
-        myfooter
+        myfooter,
+        comment,
+        downloadApp
       },
       mounted() {
-        this.$ajax.post('consumer/getUserInfos' + 'id=1').then((response) => { //咨询分类列表
+        document.cookie
+        var token = this.$cookies.get("token")
+        this.tokenData = token
+        var Cparams= {
+          'user_token' : this.tokenData,
+        };
+        var Captcha = Cparams; // 这里才是你的表单数据
+        this.$ajax.post('consumer/getUserInfos',Cparams).then((response) => { //用户个人信息
           if (response.status >= 200 && response.status < 300) {
             this.userInfo = response.data.data
           } else {
             console.log(response.message);
           }
         });
+
+      },
+      methods: {
+        //保存
+        modifySubmit() {
+              document.cookie
+              var token = this.$cookies.get("token")
+              this.tokenData = token
+              var name= {
+                'real_name' : this.name.real_name,
+                'user_token' : this.tokenData,
+              };
+              var name = name; // 这里才是你的表单数据
+              this.$ajax.post('consumer/setUserInfos', name).then((response) => {
+                // success callback
+                alert(response.data.msg)//接口返回信息
+                console.log(response);
+              }, (response) => {
+                // error callback
+                console.log(error);
+              });
+            },
+            open() {
+              this.$alert(<downloadApp/>,{
+                dangerouslyUseHTMLString: true,
+                  showConfirmButton:false,
+              });
+             }
       }
   }
 </script>
@@ -58,4 +138,14 @@
       .breadcrumbpic { position:absolute; bottom: -12px; right:0; width:342px; height:68px;}
     }
     .userTop { height: 140px; background: url("~@/assets/img/user/bg.jpg") repeat-x;}
+    .userLeft { margin-right: 20px; padding: 30px 0; float:left; width: 180px; background-color: #fff;
+      .el-menu { border: 0;}
+    }
+    .userRight { padding: 30px; float: right; width: 940px; background-color: #fff;
+      .infoform {
+        li { padding: 15px 0; font-size: 14px; border-bottom: 1px solid #eee;
+          &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
+        }
+      }
+    }
 </style>

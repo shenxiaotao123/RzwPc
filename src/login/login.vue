@@ -10,7 +10,7 @@
                        <div class="pos-rlt">
                          <el-input v-model="sms.tel_code" class="m-b-sm" center clearable left-icon="qr" maxlength="6" type="text" placeholder="短信验证码"></el-input>
                          <el-button type="text" class="Code" v-show="!sendCode">{{authTime}}秒</el-button>
-                         <el-button type="text" class="Code" v-show="sendCode" @click="ObtainCode()">获取验证码</el-button>
+                         <el-button type="text" class="Code pointer" v-show="sendCode" @click="ObtainCode()">获取验证码</el-button>
                        </div>
 
                        <div class="m-t-md">
@@ -21,8 +21,8 @@
 
             </el-tabs>
             <div class="size12 m-t-md text-gray">
-              <span class="fl" @click="open">忘记登录密码？</span>
-              <span class="fr" @click="$router.push({path:'/reg'})">还没有账号？立即注册</span>
+              <span class="fl pointer" @click="open">忘记登录密码？</span>
+              <span class="fr pointer" @click="$router.push({path:'/reg'})">还没有账号？立即注册</span>
             </div>
           </div>
        </div>
@@ -80,8 +80,9 @@
                   this.$cookies.isKey('token')
                   console.log('没有token')
                   this.$cookies.set('token', response.data.data.token,60*60*24*30)
-                  console.log('12345')
-                   console.log(response.data.data.token)
+                  this.$cookies.set('real_name', response.data.data.real_name,60*60*24*30)
+                  this.$cookies.set('user_image', response.data.data.user_image,60*60*24*30)
+                  console.log(response.data.data.token)
                   document.cookie
                   var realname = this.$cookies.get("real_name")
                   this.realnameData = realname

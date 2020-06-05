@@ -102,7 +102,7 @@
       methods: {
 
         open() {
-          this.$alert(<downloadApp></downloadApp>,{
+          this.$alert(<downloadApp/>,{
             dangerouslyUseHTMLString: true,
               showConfirmButton:false,
           });

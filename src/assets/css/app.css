@@ -260,6 +260,7 @@ a { text-decoration: none;}
 .text-darkgray { color: #333;}
 .text-mainColor { color: #c82126;}
 
+.pointer { cursor: pointer;}
 
 .el-message-box { width: 600px !important;}
 

@@ -6,10 +6,11 @@
 
     			</div>
     			<ul class="fr text-gray">
-    				<li>
-    						<a @click="$router.push({path:'/login'})" class="text-gray">登录</a>
+              <li class="text-mainColor" id="loginIfon">{{realnameData}} <span class="m-l-sm text-gray" @click="$router.push({path:'/userIndex'})">用户中心</span></li>
+    				  <li class="text-gray" id="notlogin">
+    						<a @click="$router.push({path:'/login'})">登录</a>
     					</li>
-    					<li>
+    					<li id="notlogin2">
     						<a href="/Home/Index/reg" class="text-gray">注册</a>
     					</li>
     									<li class="spacer"></li>
@@ -57,6 +58,27 @@
         comment,
         downloadApp
       },
+      created (){
+        document.cookie
+        var realname = this.$cookies.get("real_name")
+        this.realnameData = realname
+      },
+      mounted() {
+         document.cookie
+         var realname = this.$cookies.get("real_name")
+         var idObject = document.getElementById('notlogin');
+         var idObject2 = document.getElementById('notlogin2');
+         var loginIfon = document.getElementById('loginIfon');
+         if(realname != null){
+           idObject.parentNode.removeChild(idObject);
+         }
+         if(realname != null){
+           idObject2.parentNode.removeChild(idObject2);
+         }
+         else {
+           loginIfon.parentNode.removeChild(loginIfon);
+         }
+      },
       methods: {
         handleSelect(key, keyPath) {
           console.log(key, keyPath);
@@ -66,7 +88,9 @@
             dangerouslyUseHTMLString: true,
               showConfirmButton:false,
           });
-        }
+        },
+
+
       }
     }
 </script>

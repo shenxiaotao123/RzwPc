@@ -16,6 +16,7 @@ import raiders from '@/raiders/detail' //查攻略详情页
 import qaList from '@/qa/list' //查攻略列表
 import qa from '@/qa/detail' //查攻略详情页
 import user from '@/user/user' //用户中心
+import userIndex from '@/user/userIndex' //用户中心首页
 import shop from '@/shop/index' //建材城首页
 import shopList from '@/shop/list' //建材城列表
 import shopdetails from '@/shop/details' //建材城列表
@@ -108,6 +109,11 @@ export default new Router({
       path: '/user', //用户中心
       name: 'user',
       component: user
+    },
+    {
+      path: '/userIndex', //用户中心首页
+      name: 'userIndex',
+      component: userIndex
     },
     {
       path: '/shop', //建材城首页
