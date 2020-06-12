@@ -1,12 +1,12 @@
 <template>
 <div>
   <myhead></myhead>
-  <div class="breadcrumbwrap">
+  <div class="shoPbreadcrumbwrap">
     <div class="wrap pos-rlt">
       <h3>全部商品分类</h3>
 
       <div class="fr w">
-        <el-input placeholder="输入关键字搜建材" v-model="input3" class="rounded shop-search">
+        <el-input placeholder="输入关键字搜建材" class="rounded shop-search">
           <i slot="suffix" class="el-input__icon el-icon-search"></i>
         </el-input>
       </div>
@@ -24,7 +24,7 @@
     <div class="categories">
 
       <ul class="categoriesList">
-        <li v-for="cat of category">{{cat.category_name}}</li>
+        <li v-for="cat of category" class="pointer" @click="$router.push({path:'/shopList',query:{category_id:cat.id}})">{{cat.category_name}}</li>
       </ul>
     </div>
   </div>
@@ -33,7 +33,7 @@
     <!--广告-->
     <el-row class="ad">
       <el-col :span="6" v-for="adb of adsbanner.slice(0,4)">
-        <el-image :src="adb.pic_url"></el-image>
+        <a :href="adb.url" target="_blank"><el-image class="pointer" :src="adb.pic_url"></el-image></a>
       </el-col>
     </el-row>
 
@@ -46,10 +46,10 @@
             <div class="ranking">
               <h4>销量排行榜</h4>
                <div class="rankingList" v-for="goo of goods.slice(0,6)">
-                 <el-image :src="goo.goods_thumb" @click="$router.push({path:'/shopList',query:{id:goo.id}})"></el-image>
+                 <el-image class="pointer" :src="goo.goods_thumb" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})"></el-image>
                  <div class="rankingInfo">
                    <div class="name size14 text-darkgray">
-                      <p class="goods_name" @click="$router.push({path:'/shopList',query:{id:goo.id}})">{{ goo.goods_name }}</p>
+                      <p class="goods_name pointer" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})">{{ goo.goods_name }}</p>
                       <span class="size12 text-mainColor">￥{{goo.low_price}}</span><br />
                       <span class="size12 text-gray">已售: {{goo.sales_actual}}件 </span>
                    </div>
@@ -57,11 +57,11 @@
               </div>
             </div>
           </el-col>
-          <el-col :span="8" v-for="goo of goods">
+          <el-col :span="8" v-for="goo of goods2">
             <div class="recommendList">
-              <el-image :src="goo.goods_thumb" @click="$router.push({path:'/shopList',query:{id:goo.id}})"></el-image>
+              <el-image class="pointer" :src="goo.goods_thumb" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})"></el-image>
               <div class="name size14 text-darkgray">
-                 <p class="goods_name m-t-xs m-b-xs" @click="$router.push({path:'/shopList',query:{id:goo.id}})">{{ goo.goods_name }}</p>
+                 <p class="goods_name m-t-xs m-b-xs pointer" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})">{{ goo.goods_name }}</p>
                  <span class="size12 text-mainColor">￥{{goo.low_price}}</span>
                  <span class="size12 text-gray fr">已售: {{goo.sales_actual}}件 </span>
               </div>
@@ -73,9 +73,9 @@
         <div class="Propaganda">
           <h4>合作伙伴</h4>
             <div class="Partner" v-for="sto of store.slice(0,6)">
-              <el-image :src="sto.logo_image" @click="$router.push({path:'/shopIndex',query:{shop_id:sto.shop_id}})"></el-image>
+              <el-image class="pointer" :src="sto.logo_image" @click="$router.push({path:'/shopIndex',query:{shop_id:sto.shop_id}})"></el-image>
               <div class="PartnerInfo">
-                <div class="name size14 text-darkgray" @click="$router.push({path:'/shopIndex',query:{shop_id:sto.shop_id}})">{{ sto.shop_name }}<br /><span class="size12 text-gray">好评率</span></div>
+                <div class="name size14 text-darkgray pointer" @click="$router.push({path:'/shopIndex',query:{shop_id:sto.shop_id}})">{{ sto.shop_name }}<br /><span class="size12 text-gray">好评率</span></div>
               </div>
             </div>
         </div>
@@ -135,7 +135,8 @@
           adsbanner:[],
           category:[],
           store:[],
-          goods:[]
+          goods:[],
+          goods2:[]
         }
       },
       components: {
@@ -165,9 +166,26 @@
             console.log(response.message);
           }
         });
-        this.$ajax.get('shop/goods' + '?itemsPerLoad=10').then((response) => { //商品列表
+        this.$ajax.get('shop/goods' + '?itemsPerLoad=6',
+        {
+          params: {
+            'des_status' : '1'
+        },
+        },).then((response) => { //商品列表
           if (response.status >= 200 && response.status < 300) {
             this.goods = response.data.data
+          } else {
+            console.log(response.message);
+          }
+        });
+        this.$ajax.get('shop/goods' + '?itemsPerLoad=10',
+                      {
+                        params: {
+                          'lastIndex' : '7'
+                        },
+                      },).then((response) => { //商品列表
+          if (response.status >= 200 && response.status < 300) {
+            this.goods2 = response.data.data
           } else {
             console.log(response.message);
           }
@@ -178,7 +196,7 @@
 
 <style lang="less">
   @bg-color: #bd2032;
-  .breadcrumbwrap { height: 40px; line-height:40px; background:#333;
+  .shoPbreadcrumbwrap { height: 40px; line-height:40px; background:#333;
     .el-breadcrumb { margin-left: 20px; line-height: 40px;}
        h3 { float:left; width: 200px; height: 40px; line-height: 40px; font-size: 12px; text-align: center; color:#fff; background-color: @bg-color;}
       .el-breadcrumb__item {

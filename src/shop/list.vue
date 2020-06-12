@@ -23,18 +23,11 @@
           <div class="fi-key">建材分类：</div>
           <div class="fi-value">
             <ul class="fi_valueList">
-               <li v-for="cat of category"><a href="">{{cat.category_name}}</a></li>
+               <li :class="activeClass == index ? 'active':''" v-for="(type,index) of category" @click="router(type.id),getItme(index)">{{type.category_name}}</li>
             </ul>
           </div>
         </div>
-        <div class="fi-wrap">
-          <div class="fi-key">品牌：</div>
-          <div class="fi-value">
-            <ul class="fi_valueList">
-               <li v-for="bra of brand"><a href="">{{bra.brand_name}}</a></li>
-            </ul>
-          </div>
-        </div>
+
 
       </div>
 
@@ -57,9 +50,9 @@
         <el-row>
           <el-col :span="8" v-for="goo of goods">
             <div class="recommendList">
-              <el-image :src="goo.goods_thumb" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})"></el-image>
+              <el-image class="pointer" :src="goo.goods_thumb" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})"></el-image>
               <div class="name size14 text-darkgray">
-                 <p class="goods_name m-t-xs m-b-xs" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})">{{ goo.goods_name }}</p>
+                 <p class="goods_name m-t-xs m-b-xs pointer" @click="$router.push({path:'/shopdetails',query:{spuid:goo.spu_id,shopid:goo.shop_id}})">{{ goo.goods_name }}</p>
                  <span class="size12 text-mainColor">￥{{goo.low_price}}</span>
                  <span class="size12 text-gray fr">已售: {{goo.sales_actual}}件 </span>
               </div>
@@ -71,7 +64,7 @@
         </div>
       </div>
       <div class="shoprRight">
-        <el-image :src="rightSrc"></el-image>
+        <el-image class="pointer" :src="rightSrc"></el-image>
         <div class="Propaganda m-t-sm">
           <h4>买建材 上荣装网</h4>
           <div class="pg-subtitle">
@@ -159,13 +152,23 @@
             console.log(response.message);
           }
         });
-        this.$ajax.get('shop/goods' + '?itemsPerLoad=10').then((response) => { //商品列表
-          if (response.status >= 200 && response.status < 300) {
+        var category_id = this.$route.query.category_id
+        this.$ajax.get('shop/goods' + '?category_id=' + category_id ).then((response) => { //商品列表
             this.goods = response.data.data
-          } else {
-            console.log(response.message);
-          }
         });
+
+      },
+      methods: {
+          router(category_id){ //获取建材分类的ID
+            //console.log(category_id);
+            this.$ajax.get('shop/goods' + '?category_id=' + category_id ).then((response) => { //商品列表
+                this.goods = response.data.data
+            });
+          },
+          getItme(index) {
+            this.activeClass = index;  // 把当前点击元素的index，赋值给activeClass
+          },
+
       }
   }
 </script>
@@ -174,6 +177,7 @@
   @bg-color: #bd2032;
   @mian-color: #c82126;
 
+  
   .breadcrumbwrap { height: 40px; line-height:40px; background:#333;
     .el-breadcrumb { line-height: 40px;}
        h3 { float:left; width: 200px; height: 40px; line-height: 40px; font-size: 12px; text-align: center; color:#fff; background-color: @bg-color;}
@@ -198,8 +202,8 @@
         .fi-value { padding-right: 30px; padding-left: 10px; overflow: hidden; zoom: 1;
           .fi_valueList {
             &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
-            li { float:left; margin:0 20px 0 0;
-              a { padding:3px 10px; display:block;}
+            li { float:left; margin:0 20px 0 0; padding:3px 10px; cursor: pointer;
+              a { display:block;}
               .active { background:@mian-color; color:#fff; border-radius:3px; }
             }
           }

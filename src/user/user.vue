@@ -16,8 +16,15 @@
          <el-avatar :size="80" :src="userInfo.user_image" class="v-middle fl m-r-md"></el-avatar>
          <div class="fl">
            <strong><p class="size24 l-h-1-6x bbs_user_name">{{userInfo.real_name}}</p></strong>
-           <p class="m-t-xs size14 text-gray pointer" @click="$router.push({path:'/userIndex'})">进入个人主页</p>
+           <p class="m-t-xs size14 text-gray">基本信息设置</p>
          </div>
+       </div>
+       <ul class="fl countFollow">
+         <li>关注<strong class="m-l-sm">{{countFollow.count}}</strong></li>
+         <li>收藏<strong class="m-l-sm">{{countCollect.count}}</strong></li>
+       </ul>
+       <div class="fr m-t-xxl">
+         <span class="size16 pointer" @click="$router.push({path:'/userIndex'})">返回个人主页<i class="el-icon-arrow-right"></i></span>
        </div>
     </div>
   </div>
@@ -73,7 +80,9 @@
           userInfo:[],
           name:{
             real_name:''
-          }
+          },
+          countFollow:[],
+          countCollect:[]
         }
       },
       components: {
@@ -96,6 +105,12 @@
           } else {
             console.log(response.message);
           }
+        });
+        this.$ajax.post('consumer/countFollow', Cparams).then((response) => { //关注数量统计
+            this.countFollow = response.data.data
+        });
+        this.$ajax.post('consumer/countCollect', Cparams).then((response) => { //关注数量统计
+            this.countCollect = response.data.data
         });
 
       },
@@ -137,7 +152,12 @@
       }
       .breadcrumbpic { position:absolute; bottom: -12px; right:0; width:342px; height:68px;}
     }
-    .userTop { height: 140px; background: url("~@/assets/img/user/bg.jpg") repeat-x;}
+    .userTop { height: 140px; background: url("~@/assets/img/user/bg.jpg") repeat-x;
+      .countFollow { margin: 50px 0 0 50px;
+        &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
+        li { margin-right: 50px; float: left; font-size: 16px;}
+      }
+    }
     .userLeft { margin-right: 20px; padding: 30px 0; float:left; width: 180px; background-color: #fff;
       .el-menu { border: 0;}
     }

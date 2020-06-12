@@ -17,7 +17,8 @@
            <div class="fi-key">分类：</div>
            <div class="fi-value">
              <ul class="fi_valueList">
-                <li v-for="bc of bbsclass"><a href="">{{bc.name}}</a></li>
+                <li :class="activeClass == index ? 'active':''" @click="getstyle(index)"><a @click="styleAll()">全部</a></li>
+                <li :class="activeClass == index ? 'active':''" v-for="(bc,index) of bbsclass" @click="router(bc.id),getstyle(index)">{{bc.name}}</li>
              </ul>
            </div>
          </div>
@@ -35,13 +36,13 @@
 
      <div class="renderings-listcon">
        <el-row :gutter="20">
-         <el-col :span="8" v-for="adv of advisory.slice(0,3)">
+         <el-col :span="8" v-for="radv of recommendAdvisory.slice(0,3)">
            <div class="case">
              <el-image></el-image>
              <div class="caseInfo">
                <div class="name size14 text-darkgray">
-                 <span class="text-gray">#{{ adv.class.name }}#</span>
-                 <span class="title">{{ adv.bbs_title }}</span>
+                 <span class="text-gray">#{{ radv.class.name }}#</span>
+                 <span class="title pointer" @click="$router.push({path:'/qa',query:{id:radv.id,class_id:radv.class_id}})">{{ radv.bbs_title }}</span>
                </div>
              </div>
            </div>
@@ -50,12 +51,12 @@
 
        <div class="advisoryWrap">
          <div class="advisoryBox" v-for="adv of advisory.slice(0,8)">
-           <div class="advisoryAsk" @click="$router.push({path:'/qa',query:{id:adv.id,class_id:adv.class_id}})">
+           <div class="advisoryAsk pointer" @click="$router.push({path:'/qa',query:{id:adv.id,class_id:adv.class_id}})">
              <span class="fr text-gray font-normal">#{{ adv.class.name }}#</span>
              <i class="advicon askIcon"></i>{{ adv.bbs_title }}
            </div>
            <div class="advisoryAnswer"><i class="advicon answerIcon"></i>{{ adv.last_comment }}</div>
-           <div class="advisoryAll text-gray" @click="$router.push({path:'/qa',query:{id:adv.id,class_id:adv.class_id}})">
+           <div class="advisoryAll text-gray pointer" @click="$router.push({path:'/qa',query:{id:adv.id,class_id:adv.class_id}})">
              <span class="fr">{{adv.updated_at}}</span>
              全部 <span class="text-mainColor">{{adv.bbs_com_num}}</span> 个回答
              </div>
@@ -84,7 +85,8 @@
         data() {
           return {
             advisory:[],
-            bbsclass:[]
+            bbsclass:[],
+            recommendAdvisory:[]
           }
         },
         components: {
@@ -92,6 +94,18 @@
           myfooter
         },
       mounted() {
+        this.$ajax.get('bbs/advisory',
+        {
+          params: {
+            'is_rec' : '1'
+          },
+        },).then((response) => { //咨询列表
+          if (response.status >= 200 && response.status < 300) {
+            this.recommendAdvisory = response.data.data
+          } else {
+            console.log(response.message);
+          }
+        });
         this.$ajax.get('bbs/advisory').then((response) => { //咨询列表
           if (response.status >= 200 && response.status < 300) {
             this.advisory = response.data.data
@@ -106,6 +120,21 @@
             console.log(response.message);
           }
         });
+      },
+      methods: {
+        router(class_id){ //获取风格分类的ID
+          this.$ajax.get('bbs/advisory' + '?class_id	=' + class_id ).then((response) => { //商品列表
+              this.advisory = response.data.data
+          });
+        },
+        getstyle(index) {
+          this.activeClass = index;  // 把当前点击元素的index，赋值给activeClass
+        },
+        styleAll() {
+          this.$ajax.get('bbs/advisory').then((response) => { //商品列表
+              this.advisory = response.data.data
+          });
+        },
       }
     }
 </script>
@@ -122,7 +151,7 @@
         }
         .breadcrumbpic { position:absolute; bottom: -12px; right:0; width:342px; height:68px; background: url("~@/assets/img/construction/breadcrumb.png") no-repeat;}
       }
-      
+
     .filter { padding:35px 35px 25px 35px; background:#fff; font-size:12px;
       .fi-wrap { margin-bottom:10px;
         &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
@@ -130,15 +159,14 @@
         .fi-value { padding-right: 30px; padding-left: 10px; overflow: hidden; zoom: 1;
           .fi_valueList {
             &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
-            li { float:left; margin:0 20px 0 0;
-              a { padding:3px 10px; display:block;}
+            li { float:left; margin:0 20px 0 0; height: 22px; line-height: 22px; cursor: pointer;
               .active { background:@mian-color; color:#fff; border-radius:3px; }
             }
           }
         }
       }
     }
-    
+
     .sort { margin: 10px 0; height:38px; line-height:38px; background: #fff; border:1px solid #eee;
       a { display: inline-block; padding:0 20px; color:#888; font-size:12px; border-right: 1px solid #eee;
       }

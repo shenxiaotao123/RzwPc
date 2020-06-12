@@ -12,12 +12,12 @@
    </div>
 
    <div class="wrap">
-       <div class="filter">
+     <div class="filter">
          <div class="fi-wrap">
            <div class="fi-key">所在城市：</div>
            <div class="fi-value">
              <ul class="fi_valueList">
-               
+
              </ul>
            </div>
          </div>
@@ -25,13 +25,14 @@
            <div class="fi-key">承接户型：</div>
            <div class="fi-value">
              <ul class="fi_valueList">
-               <li v-for="sh of shapes"><a>{{sh.name}}</a></li>
+                <li :class="SactiveClass == index2 ? 'active':''" @click="getshapes(index2)"><a @click="all()">不限</a></li>
+                <li :class="SactiveClass == index2 ? 'active':''" v-for="(sh,index2) of shapes" @click="router(sh.id),getshapes(index2)"><a>{{sh.name}}</a></li>
              </ul>
            </div>
          </div>
        </div>
 
-       <div class="sort">
+     <div class="sort">
          <a href="#" class="active">
            综合排序<i class="el-icon-caret-bottom"></i>
          </a>
@@ -42,7 +43,7 @@
 
      <div class="designer-listcon">
        <div class="des-conleft">
-           <div class="dse-listbox" @click="$router.push({path:'/company',query:{id:company.id}})" v-for="company of companyList.slice(0,6)">
+           <div class="dse-listbox" @click="$router.push({path:'/company',query:{id:company.id}})" v-for="company of companyList" :data="companyList.slice((currentPage-1)*pagesize,currentPage*pagesize)" >
                <div class="dse-info">
                  <div class="fl dse-infotext">
                    <a target="_blank">
@@ -70,16 +71,24 @@
                </div>
            </div>
            <div class="text-c m-t-xxl">
-             <el-pagination background layout="prev, pager, next" :total="100"></el-pagination>
+              <el-pagination @size-change="handleSizeChange"
+                             @current-change="handleCurrentChange"
+                             :current-page="currentPage"
+                             :page-sizes="[5, 10, 20, 40]"
+                             :page-size="pagesize"
+                             layout="total, sizes, prev, pager, next, jumper"
+                             :total="companyList.length">    <!--//这是显示总共有多少数据，-->
+              </el-pagination>
            </div>
        </div>
        <div class="des-conright">
          <div class="Propaganda">
            <h4>在施工地</h4>
-             <div class="site" v-for="site of siteList.slice(0,6)">
-               <el-image :src="site.thumb_img" :fit="cover"></el-image>
-               <div class="caseInfo">
-                 <div class="name size14 text-darkgray">{{ site.quarter_name }}<br /><span class="size12">{{ site.shape_name }}</span></div>
+             <div class="Csite" v-for="site of recSiteList.slice(0,6)">
+               <el-image class="pointer" :src="site.thumb_img" @click="$router.push({path:'/company',query:{id:site.id}})"></el-image>
+               <div class="caseInfo" @click="$router.push({path:'/company',query:{id:site.id}})">
+                 <div class="name size14 text-darkgray">{{ site.quarter_name }}</div>
+                  <p class="text-gray m-t-xs size12">{{site.shape_name}}</p>
                </div>
              </div>
          </div>
@@ -136,14 +145,21 @@
         data() {
           return {
             siteList: [],
+            shapes:[],
+            currentPage:1, //初始页
+            pagesize:10,    //    每页的数据
             companyList:[],
-            shapes:[]
+            SactiveClass:'全部',
+            recSiteList:[]
           }
         },
         components: {
           myhead,
           myfooter
         },
+        created() {
+                this.handleUserList()
+              },
       mounted() {
         this.$ajax.get('/construction/site').then((response) => { //在施工地
           if (response.status >= 200 && response.status < 300) {
@@ -151,6 +167,13 @@
           } else {
             console.log(response.message);
           }
+        });
+        this.$ajax.get('/construction/site', { //在施工地 推荐
+          params: {
+            'is_rec' : '1'
+          },
+        },).then((response) => { 
+            this.recSiteList = response.data.data
         });
         this.$ajax.get('construction/company').then((response) => { //施工公司
           if (response.status >= 200 && response.status < 300) {
@@ -173,6 +196,43 @@
             console.log(response.message);
           }
         });
+      },
+      methods:{
+        // 初始页currentPage、初始每页数据数pagesize和数据data
+                  handleSizeChange: function (size) {
+                          this.pagesize = size;
+                          console.log(this.pagesize)  //每页下拉显示数据
+                  },
+                  handleCurrentChange: function(currentPage){
+                          this.currentPage = currentPage;
+                          console.log(this.currentPage)  //点击第几页
+                  },
+                  handleUserList() {
+                      this.$ajax.get('construction/company',
+                      {
+                        params: {
+                          'itemsPerLoad' : '10'
+                        },
+                      },
+                      ).then(res => {  //这是从本地请求的数据接口，
+                          this.companyList = res.body
+                      })
+
+                  },
+                  router(shape_id){ //获取户型分类的ID
+                    console.log(shape_id);
+                    this.$ajax.get('construction/company' + '?shapes=' + shape_id ).then((response) => { //商品列表
+                        this.companyList = response.data.data
+                    });
+                  },
+                  getshapes(index2) {
+                    this.SactiveClass = index2;  // 把当前点击元素的index，赋值给activeClass
+                  },
+                  all() {
+                    this.$ajax.get('construction/company').then((response) => { //商品列表
+                        this.companyList = response.data.data
+                    });
+                  },
       }
     }
 </script>
@@ -194,8 +254,7 @@
         .fi-value { padding-right: 30px; padding-left: 10px; overflow: hidden; zoom: 1;
           .fi_valueList {
             &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
-            li { float:left; margin:0 20px 0 0;
-              a { padding:3px 10px; display:block;}
+            li { float:left; margin:0 20px 0 0; cursor: pointer;
               .active { background:@mian-color; color:#fff; border-radius:3px; }
             }
           }
@@ -239,7 +298,7 @@
         }
       }
       .des-conright { float:right; width:220px;
-        .site { padding: 10px 20px;
+        .Csite { padding: 10px 20px;
           &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
           img { width: 40px;}
           .el-image { float: left;}

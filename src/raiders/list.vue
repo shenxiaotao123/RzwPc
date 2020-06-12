@@ -17,7 +17,8 @@
            <div class="fi-key">分类：</div>
            <div class="fi-value">
              <ul class="fi_valueList">
-
+               <li :class="activeClass == index ? 'active':''" @click="getstyle(index)"><a @click="styleAll()">全部</a></li>
+               <li :class="activeClass == index ? 'active':''" v-for="(bc,index) of bbsclass" @click="router(bc.id),getstyle(index)">{{bc.name}}</li>
              </ul>
            </div>
          </div>
@@ -36,8 +37,8 @@
      <div class="renderings-listcon">
        <el-row :gutter="20">
          <el-col :span="6" v-for="rai of raiders.slice(0,4)">
-           <div class="case">
-             <el-image :src="rai.bbs_pic" :fit="cover"></el-image>
+           <div class="case pointer" @click="$router.push({path:'/raiders',query:{id:rai.id}})">
+             <el-image :src="rai.bbs_pic"></el-image>
              <div class="caseInfo">
                <div class="name size14 text-darkgray">
                  <span class="title">{{ rai.bbs_title }}</span>
@@ -48,8 +49,8 @@
          </el-col>
 
        </el-row>
-       <div v-for="rai of raiders.slice(0,8)">
-         <div class="newsBox" @click="$router.push({path:'/raiders',query:{id:rai.id}})">
+       <div v-for="rai of raiders2.slice(0,8)">
+         <div class="newsBox pointer" @click="$router.push({path:'/raiders',query:{id:rai.id}})">
            <el-image :src="rai.bbs_pic" class="newsImg"></el-image>
            <div class="newsCon">
              <h5>{{rai.bbs_title}}</h5>
@@ -82,7 +83,9 @@
         name: "list",
         data() {
           return {
-            raiders:[]
+            raiders:[],
+            raiders2:[],
+            bbsclass:[]
           }
         },
         components: {
@@ -90,13 +93,47 @@
           myfooter
         },
       mounted() {
-        this.$ajax.get('bbs/guide').then((response) => { //攻略列表
+        this.$ajax.get('bbs/guide',
+        {
+          params: {
+            'is_rec' : '1'
+          },
+        },).then((response) => { //攻略列表
           if (response.status >= 200 && response.status < 300) {
             this.raiders = response.data.data
           } else {
             console.log(response.message);
           }
         });
+        this.$ajax.get('bbs/guide').then((response) => { //攻略列表2
+          if (response.status >= 200 && response.status < 300) {
+            this.raiders2 = response.data.data
+          } else {
+            console.log(response.message);
+          }
+        });
+        this.$ajax.get('bbs/class').then((response) => { //攻略/咨询 分类列表
+          if (response.status >= 200 && response.status < 300) {
+            this.bbsclass = response.data.data
+          } else {
+            console.log(response.message);
+          }
+        });
+      },
+      methods: {
+        router(class_id){ //获取风格分类的ID
+          this.$ajax.get('bbs/guide' + '?class_id	=' + class_id ).then((response) => { //商品列表
+              this.raiders2 = response.data.data
+          });
+        },
+        getstyle(index) {
+          this.activeClass = index;  // 把当前点击元素的index，赋值给activeClass
+        },
+        styleAll() {
+          this.$ajax.get('bbs/guide').then((response) => { //商品列表
+              this.raiders2 = response.data.data
+          });
+        },
       }
     }
 </script>
@@ -105,7 +142,6 @@
   @mian-color: #c82126;
 
   .bannerPic { height: 370px; background: url("~@/assets/img/raiders/banner.jpg") no-repeat center -50px;}
-
    .el-row {
       margin-bottom: 20px;
       &:last-child {
@@ -118,7 +154,6 @@
     .bg-purple-light { background: #e5e9f2;}
     .grid-content { border-radius: 4px; min-height: 36px;}
     .row-bg { padding: 10px 0; background-color: #f9fafc;}
-
     .breadcrumbwrap { padding: 10px 0; line-height:24px; background:#333;
         .el-breadcrumb__item {
           span { color:#fff; font-size: 12px;}
@@ -133,8 +168,7 @@
         .fi-value { padding-right: 30px; padding-left: 10px; overflow: hidden; zoom: 1;
           .fi_valueList {
             &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
-            li { float:left; margin:0 20px 0 0;
-              a { padding:3px 10px; display:block;}
+            li { float:left; margin:0 20px 0 0; height: 22px; line-height: 22px; cursor: pointer;
               .active { background:@mian-color; color:#fff; border-radius:3px; }
             }
           }

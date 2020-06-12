@@ -6,11 +6,11 @@
 
     			</div>
     			<ul class="fr text-gray">
-              <li class="text-mainColor" id="loginIfon">{{realnameData}} <span class="m-l-sm text-gray" @click="$router.push({path:'/userIndex'})">用户中心</span></li>
-    				  <li class="text-gray" id="notlogin">
+              <li class="text-mainColor pointer" id="loginIfon">{{realnameData}} <span class="m-l-sm text-gray" @click="$router.push({path:'/userIndex'})">用户中心</span></li>
+    				  <li class="text-gray pointer" id="notlogin">
     						<a @click="$router.push({path:'/login'})">登录</a>
     					</li>
-    					<li id="notlogin2">
+    					<li id="notlogin2 pointer">
     						<a href="/Home/Index/reg" class="text-gray">注册</a>
     					</li>
     									<li class="spacer"></li>
@@ -25,13 +25,13 @@
     <div class="wrap">
       <a href="/" class="logo"></a>
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1" @click="$router.push({path:'/'})">首页</el-menu-item>
-        <el-menu-item index="2" @click="$router.push({path:'/constructionList'})">找施工</el-menu-item>
-        <el-menu-item index="3" @click="$router.push({path:'/designerList'})">找设计</el-menu-item>
-        <el-menu-item index="4" @click="$router.push({path:'/shop'})">买材料</el-menu-item>
-        <el-menu-item index="5" @click="$router.push({path:'/renderingsList'})">效果图</el-menu-item>
-        <el-menu-item index="6" @click="$router.push({path:'/raidersList'})">查攻略</el-menu-item>
-        <el-menu-item index="7" @click="$router.push({path:'/qaList'})">咨询问答</el-menu-item>
+        <el-menu-item :class="{active:shows==1}" index="1" @click="$router.push({path:'/'}),getItme1()">首页</el-menu-item>
+        <el-menu-item :class="{active:shows==2}" index="2" @click="$router.push({path:'/constructionList'}),getItme2()">找施工</el-menu-item>
+        <el-menu-item :class="{active:shows==3}" index="3" @click="$router.push({path:'/designerList'}),getItme3()">找设计</el-menu-item>
+        <el-menu-item :class="{active:shows==4}" index="4" @click="$router.push({path:'/shop'}),getItme4()">买材料</el-menu-item>
+        <el-menu-item :class="{active:shows==5}" index="5" @click="$router.push({path:'/renderingsList'}),getItme5()">效果图</el-menu-item>
+        <el-menu-item :class="{active:shows==6}" index="6" @click="$router.push({path:'/raidersList'}),getItme6()">查攻略</el-menu-item>
+        <el-menu-item :class="{active:shows==7}" index="7" @click="$router.push({path:'/qaList'}),getItme7()">咨询问答</el-menu-item>
         <el-submenu index="8">
           <template slot="title">更多</template>
           <el-menu-item index="8-1">创客空间</el-menu-item>
@@ -51,7 +51,8 @@
       data() {
         return {
           activeIndex: '1',
-          activeIndex2: '1'
+          activeIndex2: '1',
+          shows:1
         };
       },
       components: {
@@ -89,14 +90,35 @@
               showConfirmButton:false,
           });
         },
-
-
+        getItme1:function() {
+          this.shows = 1;  // 把当前点击元素的index，赋值给activeClass
+        },
+         getItme2:function() {
+           this.shows = 2;  // 把当前点击元素的index，赋值给activeClass
+         },
+        getItme3:function() {
+          this.shows = 3;  // 把当前点击元素的index，赋值给activeClass
+        },
+        getItme4:function() {
+          this.shows = 4;  // 把当前点击元素的index，赋值给activeClass
+        },
+        getItme5:function() {
+          this.shows = 5;  // 把当前点击元素的index，赋值给activeClass
+        },
+        getItme6:function() {
+          this.shows = 6;  // 把当前点击元素的index，赋值给activeClass
+        },
+        getItme7:function() {
+          this.shows = 7;  // 把当前点击元素的index，赋值给activeClass
+        }
       }
     }
 </script>
 
 <style lang="less">
    @mian-color: #c82126;
+
+   .active { color:@mian-color !important; font-weight: 700;}
 .myhead { height: 116px; background: #fff;
   .logo { margin-top: 30px; float: left; display: block; width: 177px; height: 23px; background: url("~@/assets/img/components/logo.png") no-repeat;}
   .el-menu.el-menu--horizontal { margin-top: 11px; float: right; border: 0;}

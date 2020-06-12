@@ -106,7 +106,7 @@
               <div class="case m-t-xxl ">
                 <el-col :span="4" v-for="site of siteHome.slice(0,6)">
                   <div class="homeCase site">
-                    <el-image :src="site.thumb_img" :fit="cover"></el-image>
+                    <el-image :src="site.thumb_img"></el-image>
                     <div class="caseInfo">
                       <div class="name size16 text-darkgray">{{ site.quarter_name }}|{{ site.shape_name }}</div>
                     </div>
@@ -135,7 +135,7 @@
       </div>
     </div>
     <!--装饰案例
-    <div class="bg-f7 case homeBox" style="padding-top: 40px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ">
+    <div class="bg-f7 case homeBox" style="padding-top: 40px;">
       <div class="wrap">
         <h2 class="text-darkgray text-c">装饰案例</h2>
         <p class="vice text-lightgray text-c">用过来人的经验和各路达人的支招为您的家保驾护航</p>
@@ -198,7 +198,7 @@
         <p class="vice text-lightgray text-c">新闻资讯,一手掌握</p>
         <el-row>
           <el-col :span="12" v-for="news of guideHome.slice(0,4)">
-            <div class="newsBox">
+            <div class="newsBox pointer" @click="$router.push({path:'/raiders',query:{id:news.id}})">
               <el-image :src="news.bbs_pic" class="newsImg"></el-image>
               <div class="newsCon">
                 <h5>{{news.bbs_title}}</h5>

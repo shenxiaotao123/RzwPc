@@ -17,7 +17,8 @@
            <div class="fi-key">风格：</div>
            <div class="fi-value">
              <ul class="fi_valueList">
-
+                <li :class="activeClass == index ? 'active':''" @click="getstyle(index)"><a @click="styleAll()">全部</a></li>
+                <li :class="activeClass == index ? 'active':''" v-for="(ds,index) of designerStyle" @click="router(ds.id),getstyle(index)">{{ds.name}}</li>
              </ul>
            </div>
          </div>
@@ -25,15 +26,8 @@
            <div class="fi-key">户型：</div>
            <div class="fi-value">
              <ul class="fi_valueList">
-               <li v-for="sh of shapes"><a>{{sh.name}}</a></li>
-             </ul>
-           </div>
-         </div>
-         <div class="fi-wrap">
-           <div class="fi-key">预算：</div>
-           <div class="fi-value">
-             <ul class="fi_valueList">
-               <li v-for="sh of shapes"><a>{{sh.name}}</a></li>
+                <li :class="SactiveClass == index2 ? 'active':''" @click="getshapes(index2)"><a @click="styleAll()">全部</a></li>
+                <li :class="SactiveClass == index2 ? 'active':''" v-for="(sh,index2) of shapes" @click="router(sh.id),getshapes(index2)"><a>{{sh.name}}</a></li>
              </ul>
            </div>
          </div>
@@ -52,7 +46,7 @@
        <el-row :gutter="20">
          <el-col :span="6" v-for="site of renderings.slice(0,12)">
            <div class="case">
-             <el-image :src="site.img" :fit="cover" :preview-src-list="site.work_images"></el-image>
+             <el-image :src="site.img" :preview-src-list="site.work_images"></el-image>
              <div class="caseInfo">
                <div class="name size14 text-darkgray"><span class="title">{{ site.title }}</span><span class="fr text-gray v-middle">{{ site.mianji }}㎡</span></div>
              </div>
@@ -82,7 +76,11 @@
         name: "list",
         data() {
           return {
-            renderings:[]
+            renderings:[],
+            designerStyle:[],
+            shapes:[],
+            activeClass:'全部',
+            SactiveClass:'全部',
           }
         },
         components: {
@@ -91,22 +89,59 @@
           downloadApp
         },
       mounted() {
-        this.$ajax.get('designer/works').then((response) => { //首设计师
+        this.$ajax.get('designer/works').then((response) => { //设计师作品
           if (response.status >= 200 && response.status < 300) {
             this.renderings = response.data.data
           } else {
             console.log(response.message);
           }
         });
+        this.$ajax.get('designer/style').then((response) => { //设计风格列表
+          if (response.status >= 200 && response.status < 300) {
+            this.designerStyle = response.data.data
+          } else {
+            console.log(response.message);
+          }
+        });
+        this.$ajax.get('shapes').then((response) => { //户型列表
+          if (response.status >= 200 && response.status < 300) {
+            this.shapes = response.data.data
+          } else {
+            console.log(response.message);
+          }
+        });
       },
       methods: {
-
         open() {
           this.$alert(<downloadApp/>,{
             dangerouslyUseHTMLString: true,
               showConfirmButton:false,
           });
-        }
+        },
+        router(style_id){ //获取风格分类的ID
+          //console.log(style_id);
+          this.$ajax.get('designer/works' + '?style_id=' + style_id ).then((response) => { //商品列表
+              this.renderings = response.data.data
+          });
+        },
+        getstyle(index) {
+          this.activeClass = index;  // 把当前点击元素的index，赋值给activeClass
+        },
+        styleAll() {
+          this.$ajax.get('designer/works').then((response) => { //商品列表
+              this.renderings = response.data.data
+          });
+        },
+
+        router(shape_id){ //获取户型分类的ID
+          console.log(shape_id);
+          this.$ajax.get('designer/works' + '?shape_id=' + shape_id ).then((response) => { //商品列表
+              this.renderings = response.data.data
+          });
+        },
+        getshapes(index2) {
+          this.SactiveClass = index2;  // 把当前点击元素的index，赋值给activeClass
+        },
       }
     }
 </script>
@@ -140,8 +175,7 @@
         .fi-value { padding-right: 30px; padding-left: 10px; overflow: hidden; zoom: 1;
           .fi_valueList {
             &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
-            li { float:left; margin:0 20px 0 0;
-              a { padding:3px 10px; display:block;}
+            li { float:left; margin:0 20px 0 0; height: 22px; line-height: 22px; cursor: pointer;
               .active { background:@mian-color; color:#fff; border-radius:3px; }
             }
           }

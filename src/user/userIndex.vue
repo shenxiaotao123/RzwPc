@@ -15,12 +15,13 @@
          <el-avatar :size="80" :src="userInfo.user_image" class="v-middle fl m-r-md"></el-avatar>
          <div class="fl">
            <strong><p class="size24 l-h-1-6x bbs_user_name">{{userInfo.real_name}}</p></strong>
-           <p class="m-t-xs size14 text-gray">进入个人主页</p>
+           <p class="m-t-xs size14 text-gray pointer" @click="$router.push({path:'/user'})">基本信息设置<i class="el-icon-arrow-right"></i></p>
          </div>
        </div>
-       <div class="fr m-t-xxl">
-         <span class="size16 pointer" @click="$router.push({path:'/user'})">设置基本信息<i class="el-icon-arrow-right"></i></span>
-       </div>
+       <ul class="fl countFollow">
+         <li>关注<strong class="m-l-sm">{{countFollow.count}}</strong></li>
+         <li>收藏<strong class="m-l-sm">{{countCollect.count}}</strong></li>
+       </ul>
     </div>
   </div>
   <div class="wrap userTab">
@@ -59,14 +60,14 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="案例" name="Case">
-          
+
         </el-tab-pane>
         <el-tab-pane label="效果图" name="Renderings">
           <div class="renderings-listcon">
             <el-row :gutter="20">
               <el-col :span="6" v-for="site of demo">
                 <div class="case">
-                  <el-image :src="site.demo.img" :preview-src-list="site.demo.work_images"></el-image>
+                  <el-image :src="site.demo.img" :preview-src-list="site.demo.images.oss_url"></el-image>
                   <div class="caseInfo">
                     <div class="name size14 text-darkgray"><span class="title">{{ site.demo.title }}</span><span class="fr text-gray v-middle">{{ site.demo.mianji }}㎡</span></div>
                   </div>
@@ -76,19 +77,6 @@
             </el-row>
 
           </div>
-        </el-tab-pane>
-        <el-tab-pane label="局部图" name="PartialView">
-
-          <div class="noComment">
-            <img src="@/assets/img/zanwu.png"/>
-            <p class="m-t-md size14">
-              没有相应的回答
-            </p>
-            <p class="m-t-xs size14">
-              看看其他的~
-            </p>
-          </div>
-
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -110,7 +98,9 @@
           activeName: 'commodity',
           goods:[],
           guide:[],
-          demo:[]
+          demo:[],
+          countFollow:[],
+          countCollect:[]
         }
       },
       components: {
@@ -173,7 +163,6 @@
         ).then((response) => {
           if (response.status >= 200 && response.status < 300) {
             this.guide = response.data.data
-            console.log(response.data.data);
           } else {
             console.log(response.message);
           }
@@ -194,6 +183,13 @@
           }
         });
 
+        this.$ajax.post('consumer/countFollow', tokenData).then((response) => { //关注数量统计
+            this.countFollow = response.data.data
+        });
+        this.$ajax.post('consumer/countCollect', tokenData).then((response) => { //关注数量统计
+            this.countCollect = response.data.data
+        });
+
       },
       methods: {
         handleClick(tab, event) {
@@ -211,7 +207,12 @@
       }
       .breadcrumbpic { position:absolute; bottom: -12px; right:0; width:342px; height:68px;}
     }
-    .userTop { height: 140px; background: url("~@/assets/img/user/bg.jpg") repeat-x;}
+    .userTop { height: 140px; background: url("~@/assets/img/user/bg.jpg") repeat-x;
+      .countFollow { margin: 50px 0 0 50px;
+        &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
+        li { margin-right: 50px; float: left; font-size: 16px;}
+      }
+    }
     .userTab {
       .el-tabs__header { padding:0 30px; background-color: #fff;}
       .el-tabs__item { height: 60px; line-height: 60px; font-size: 16px;}

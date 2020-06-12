@@ -25,7 +25,8 @@
            <div class="fi-key">擅长风格：</div>
            <div class="fi-value">
              <ul class="fi_valueList">
-               <li v-for="sh of shapes"><a>{{sh.name}}</a></li>
+               <li :class="activeClass == index ? 'active':''" @click="getstyle(index)"><a @click="styleAll()">全部</a></li>
+               <li :class="activeClass == index ? 'active':''" v-for="(sh,index) of designerStyle" @click="router(sh.id),getstyle(index)">{{sh.name}}</li>
              </ul>
            </div>
          </div>
@@ -51,10 +52,8 @@
            <div class="dse-listbox" v-for="designer of designerList.slice(0,6)">
                <div class="dse-info">
                  <div class="fl dse-infotext" @click="$router.push({path:'/designer',query:{id:designer.id}})">
-                   <a target="_blank" >
-                     <el-image shape="square" :src="designer.avatar" class="dse-avatar m-r-md"></el-image>
-                   </a>
-                   <div class="designer-info">
+                   <el-image shape="square" :src="designer.avatar" class="dse-avatar m-r-md"></el-image>
+                   <div class="designer-info2">
                      <h3>
                        <a target="_blank">
                          <span class="designer-name">{{designer.name}}</span>
@@ -92,10 +91,11 @@
        <div class="des-conright">
          <div class="Propaganda">
            <h4>设计师之星</h4>
-             <div class="site" v-for="site of designerList.slice(0,6)">
-               <el-image :src="site.avatar" :fit="cover"></el-image>
-               <div class="caseInfo">
-                 <div class="name size14 text-darkgray">{{ site.name }}</div>
+             <div class="site" v-for="site of recDesignerList.slice(0,6)">
+               <el-image class="pointer" :src="site.avatar" @click="$router.push({path:'/designer',query:{id:site.id}})"></el-image>
+               <div class="caseInfo" @click="$router.push({path:'/designer',query:{id:site.id}})">
+                 <div class="name size14 text-darkgray pointer">{{ site.name }}</div>
+                 <p class="text-gray m-t-xs size12">作品数量 {{site.works_num}}</p>
                </div>
              </div>
          </div>
@@ -154,7 +154,9 @@
           return {
             siteList: [],
             designerList:[],
-            shapes:[]
+            shapes:[],
+            designerStyle:[],
+            recDesignerList:[]
           }
         },
         components: {
@@ -177,6 +179,20 @@
             console.log(response.message);
           }
         });
+        this.$ajax.get('designer/designer', {
+          params: {
+            'is_rec' : '1'
+          },
+        },).then((response) => { //设计师列表推荐
+          this.recDesignerList = response.data.data
+        });
+        this.$ajax.get('designer/style').then((response) => { //设计风格列表
+          if (response.status >= 200 && response.status < 300) {
+            this.designerStyle = response.data.data
+          } else {
+            console.log(response.message);
+          }
+        });
         this.$ajax.get('shapes').then((response) => { //小区列表
           if (response.status >= 200 && response.status < 300) {
             this.shapes = response.data.data
@@ -193,9 +209,21 @@
         });
       },
       methods: {
-
+        router(style_id){ //获取风格分类的ID
+          this.$ajax.get('designer/designer' + '?style_id=' + style_id ).then((response) => { //商品列表
+              this.designerList = response.data.data
+          });
+        },
+        getstyle(index) {
+          this.activeClass = index;  // 把当前点击元素的index，赋值给activeClass
+        },
+        styleAll() {
+          this.$ajax.get('designer/designer').then((response) => { //商品列表
+              this.designerList = response.data.data
+          });
+        },
         open() {
-          this.$alert(<downloadApp></downloadApp>,{
+          this.$alert(<downloadApp/>,{
             dangerouslyUseHTMLString: true,
               showConfirmButton:false,
           });
@@ -221,8 +249,7 @@
         .fi-value { padding-right: 30px; padding-left: 10px; overflow: hidden; zoom: 1;
           .fi_valueList {
             &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
-            li { float:left; margin:0 20px 0 0;
-              a { padding:3px 10px; display:block;}
+            li { float:left; margin:0 20px 0 0; height: 22px; line-height: 22px; cursor: pointer;
               .active { background:@mian-color; color:#fff; border-radius:3px; }
             }
           }
@@ -242,7 +269,7 @@
             &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
             .dse-avatar { float:left; width:100px; height:100px; border-radius: 5px;}
             .dse-infotext {
-              .designer-info { float:left; color: #000;
+              .designer-info2 { float:left; color: #000; width: 650px;
                 &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
                 h3 { margin: 0 0 10px 0;
                   .designer-name { font-size: 16px; font-weight: 700;}

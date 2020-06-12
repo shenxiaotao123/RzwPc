@@ -42,14 +42,18 @@
     <div class="wrap">
       <template>
         <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="施工工地(20)" name="first">
-            <div class="compCon ConstructionSite bg-ff" v-for="(site of siteHome">
-              <h4>{{ site.quarter_name }}|{{ site.shape_name }}</h4>
-              <p class="stage">{{ site.stage_name }}</p>
-              <el-row>
-                <!--<el-col :span="8" v-for="siteInfo of siteInfos.slice(0,3)"> {{siteInfo.note}}</el-col>-->
-              </el-row>
-            </div>
+          <el-tab-pane label="施工工地" name="first">
+
+              <el-col :span="6" v-for="site of siteHome" class="dsitewrap">
+                <div class="dsite site bg-ff">
+                  <el-image :src="site.thumb_img"></el-image>
+                  <div class="caseInfo">
+                    <div class="name size16 text-darkgray">{{ site.quarter_name }}|{{ site.shape_name }}</div>
+                     <p class="stage size12 text-gray">{{ site.stage_name }}</p>
+                  </div>
+                </div>
+              </el-col>
+
           </el-tab-pane>
           <el-tab-pane label="公司信息" name="second">
             <div class="compCon bg-ff">
@@ -90,7 +94,7 @@
           company:[],
           siteHome:[],
           // siteInfos:[],
-          activeName: 'second'
+          activeName: 'first'
         }
       },
       components: {
@@ -107,12 +111,8 @@
             console.log(response.message);
           }
         });
-        this.$ajax.get('/construction/site').then((response) => { //施工工地
-          if (response.status >= 200 && response.status < 300) {
+        this.$ajax.get('/construction/site' + '?company_id=' + this.$route.query.id).then((response) => { //施工工地
             this.siteHome = response.data.data
-          } else {
-            console.log(response.message);
-          }
         });
         // this.$ajax.get('/construction/construction/siteStageInfos' + this.$route.query.id + '?site_id=1').then((response) => { //工地详情
         //   if (response.status >= 200 && response.status < 300) {
@@ -128,10 +128,9 @@
           console.log(tab, event);
         },
         open() {
-          this.$alert(<downloadApp></downloadApp>,{
+          this.$alert(<downloadApp/>,{
             dangerouslyUseHTMLString: true,
               showConfirmButton:false,
-
         });
 
         }
@@ -141,7 +140,7 @@
 
 <style lang="less">
   @mian-color: #c82126;
-  
+
 
 .headCon { position: relative; height: 400px; background: url("~@/assets/img/construction/banner.jpg") no-repeat;
   .dse-info { position: absolute; left: 50%; top:50px; margin-left: -325px; padding:25px; width: 600px;
@@ -176,5 +175,22 @@
   .ConstructionSite { margin-bottom: 10px;
     h4 {}
     .stage {}
+  }
+  .dsitewrap {
+      &:nth-child(4) {
+        .dsite { margin: 0;}
+      }
+  }
+  .dsite { margin: 0 15px 0 0; background: #fff; border-radius: 5px; cursor: pointer;
+
+    img { height: 220px;}
+    .el-image__inner { border-radius: 5px 5px 0 0;}
+    .caseInfo { padding: 10px 15px;
+      &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
+      .case-style { margin-top: 10px;
+        &:after { content:"."; display:block; height:0; clear:both; visibility:hidden;}
+      }
+      .name { width:100%; overflow: hidden; text-overflow:ellipsis;white-space: nowrap;}
+    }
   }
 </style>
